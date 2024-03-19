@@ -17,7 +17,7 @@ jobs:
     - name: Install Texinfo
       run: |
           sudo apt update
-          sudo apt install -y texinfo
+          sudo apt install -y texinfo texlive
     - name: Run autotools
       run:  ./autogen.sh
     - name: Run configure
