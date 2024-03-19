@@ -12,14 +12,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: autotools
+    - uses: actions/checkout@v3
+
+    - name: Install Texinfo
+      run: |
+          sudo apt update
+          sudo apt install -y texinfo texlive
+    - name: Run autotools
       run:  ./autogen.sh
-    - name: configure
+    - name: Run configure
       run: ./configure
     - name: make
       run: make
     - name: make check
       run: make check
-#    - name: make distcheck
+#   - name: make distcheck
 #      run: make distcheck
