@@ -13,11 +13,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: packages
-      run:  apt-get update && apt-get -y install texinfo
-    - name: autotools
+
+    - name: Install Texinfo
+      run: |
+          sudo apt update
+          sudo apt install -y texinfo
+    - name: Run autotools
       run:  ./autogen.sh
-    - name: configure
+    - name: Run configure
       run: ./configure
     - name: make
       run: make
