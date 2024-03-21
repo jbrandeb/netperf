@@ -1,1 +1,5 @@
 Makefile.in
+netperf
+netserver
+netperf_version.h
+.deps/
