@@ -2,11 +2,11 @@
 # Process this file with autoconf to produce a configure script.
 
 FULL-PACKAGE-NAME=netperf
-VERSION=2.7.1
+VERSION=2.8.0
 BUG-REPORT-ADDRESS=netperf-feedback@netperf.org
 
-AC_PREREQ(2.59)
-AC_INIT(netperf, 2.7.1)
+AC_PREREQ([2.71])
+AC_INIT([netperf],[2.8.0])
 
 # Inherit compiler flags from the environment...
 CFLAGS="${CFLAGS:=}"
@@ -16,8 +16,7 @@ CXXFLAGS="${CXXFLAGS:=}"
 AC_CANONICAL_TARGET
 AC_CONFIG_SRCDIR([src/hist.h])
 AM_INIT_AUTOMAKE([dist-zip])
-AM_CONFIG_HEADER(config.h)
-# AC_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS([config.h])
 AC_USE_SYSTEM_EXTENSIONS
 
 AC_CONFIG_LIBOBJ_DIR(src/missing)
@@ -32,25 +31,32 @@ AC_PROG_RANLIB
 AC_C_CONST
 
 # Checks for libraries.
-AC_HAVE_LIBRARY(m)
+AC_CHECK_LIB([m],[main],[],[],[])ac_cv_lib_m=ac_cv_lib_m_main
+
 
 # Checks for header files.
-AC_HEADER_STDC
+AC_CHECK_INCLUDES_DEFAULT
+AC_PROG_EGREP
+
 AC_HEADER_SYS_WAIT
 
 # lets keep this in some semblence of alphabetical order
 AC_CHECK_HEADERS([arpa/inet.h endian.h errno.h fcntl.h ifaddrs.h limits.h linux/tcp.h linux/socket.h malloc.h netdb.h netinet/in.h netinet/sctp.h sched.h signal.h stdlib.h string.h strings.h syscall.h sys/ioctl.h sys/mman.h sys/param.h sys/socket.h sys/stat.h sys/time.h sys/wait.h sys/ipc.h sys/sockio.h sys/sysinfo.h sys/wait.h stdlib.h unistd.h netinet/in_systm.h netinet/ip.h sys/sendfile.h])
 
 # Some platforms require these.  There may be a better way.
-AC_HAVE_LIBRARY(socket)
+AC_CHECK_LIB([socket],[main],[],[],[])ac_cv_lib_socket=ac_cv_lib_socket_main
+
 if test "$ac_cv_lib_socket_main" = yes ; then
-    AC_HAVE_LIBRARY(nsl)
-    AC_HAVE_LIBRARY(sendfile)
+    AC_CHECK_LIB([nsl],[main],[],[],[])ac_cv_lib_nsl=ac_cv_lib_nsl_main
+
+    AC_CHECK_LIB([sendfile],[main],[],[],[])ac_cv_lib_sendfile=ac_cv_lib_sendfile_main
+
     AC_SYS_LARGEFILE
 fi
 
 # this one is for Tru64 and bind_to_cpu_id
-AC_HAVE_LIBRARY(mach)
+AC_CHECK_LIB([mach],[main],[],[],[])ac_cv_lib_mach=ac_cv_lib_mach_main
+
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -63,7 +69,8 @@ OLD_TYPE_SOCKLEN_T
 # AC_TYPE_IN_PORT_T
 AC_DECL_H_ERRNO
 AC_STRUCT_SOCKADDR_STORAGE
-AC_HEADER_TIME
+AC_CHECK_HEADERS_ONCE([sys/time.h])
+
 AC_HEADER_STDBOOL
 AC_CHECK_SA_LEN(ac_cv_sockaddr_has_sa_len)
 
@@ -74,7 +81,6 @@ AC_FUNC_FORK
 AC_FUNC_MMAP
 AC_FUNC_SELECT_ARGTYPES
 AC_FUNC_SETPGRP
-AC_TYPE_SIGNAL
 # AC_FUNC_STAT
 # remove pstat_getdynamic (at least for now) since we don't do
 # anything conditional with the check anyway...
@@ -477,7 +483,8 @@ case "$enable_sctp" in
 			# FreeBSD 7.x and later SCTP support doesn't need -lsctp.
 			;;
 		*)
-			AC_HAVE_LIBRARY(sctp,,use_sctp=false)
+			AC_CHECK_LIB([sctp],[main],[],[use_sctp=false],[])ac_cv_lib_sctp=ac_cv_lib_sctp_main
+
 			;;
 		esac
 		AC_CHECK_MEMBER(struct sctp_event_subscribe.sctp_adaptation_layer_event,
@@ -636,7 +643,8 @@ case "$enable_cpuutil" in
         perfstat)
                 use_cpuutil=true
                 AC_DEFINE([USE_PERFSTAT],,[Use AIX's perfstat interface to measure CPU util.])
-		AC_HAVE_LIBRARY(perfstat)
+		AC_CHECK_LIB([perfstat],[main],[],[],[])ac_cv_lib_perfstat=ac_cv_lib_perfstat_main
+
                 ;;
 
 	looper)
@@ -650,12 +658,14 @@ case "$enable_cpuutil" in
 	kstat)
 		use_cpuutil=true
 		AC_DEFINE([USE_KSTAT],,[Use Solaris's kstat interface to measure CPU util.])
-		AC_HAVE_LIBRARY(kstat)
+		AC_CHECK_LIB([kstat],[main],[],[],[])ac_cv_lib_kstat=ac_cv_lib_kstat_main
+
 		;;
 	kstat10)
 		use_cpuutil=true
 		AC_DEFINE([USE_KSTAT],,[Use Solaris's kstat interface to measure CPU util.])
-		AC_HAVE_LIBRARY(kstat)
+		AC_CHECK_LIB([kstat],[main],[],[],[])ac_cv_lib_kstat=ac_cv_lib_kstat_main
+
 		;;
 	osx)
 		use_cpuutil=true
@@ -687,21 +697,24 @@ case "$enable_cpuutil" in
 		     *-*-aix5.* | *-*-aix6.*)
 			use_puutil=true
 			AC_DEFINE([USE_PERFSTAT],,[Use AIX's perfstat interface to measure CPU util.])
-			AC_HAVE_LIBRARY(perfstat)
+			AC_CHECK_LIB([perfstat],[main],[],[],[])ac_cv_lib_perfstat=ac_cv_lib_perfstat_main
+
 			enable_cpuutil="perfstat - auto"
 			NETCPU_SOURCE="perfstat"
 			;;
 		     *-*-solaris2.1*)
 			use_cpuutil=true
 			AC_DEFINE([USE_KSTAT],,[Use Solaris's kstat interface to measure CPU util.])
-			AC_HAVE_LIBRARY(kstat)
+			AC_CHECK_LIB([kstat],[main],[],[],[])ac_cv_lib_kstat=ac_cv_lib_kstat_main
+
 			enable_cpuutil="kstat10 - auto"
 			NETCPU_SOURCE="kstat10"
 			;;
 		     *-*-solaris2.*)
 			use_cpuutil=true
 			AC_DEFINE([USE_KSTAT],,[Use Solaris's kstat interface to measure CPU util.])
-			AC_HAVE_LIBRARY(kstat)
+			AC_CHECK_LIB([kstat],[main],[],[],[])ac_cv_lib_kstat=ac_cv_lib_kstat_main
+
 			enable_cpuutil="kstat - auto"
 			NETCPU_SOURCE="kstat"
 			;;

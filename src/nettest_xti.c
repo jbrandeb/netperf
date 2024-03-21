@@ -77,7 +77,6 @@ char	nettest_xti_id[]="\
 #include <errno.h>
 #include <signal.h>
 #include <stdio.h>
-#include <time.h>
 #include <malloc.h>
  /* xti.h should be included *after* in.h because there are name */
  /* conflicts!( Silly standards people... raj 2/95 fortuenately, the */
@@ -88,9 +87,13 @@ char	nettest_xti_id[]="\
 #include "netsh.h"
 #include "nettest_xti.h"
 
+#include <time.h>
+
 #ifdef WANT_HISTOGRAM
 #ifdef __sgi
+#if HAVE_SYS_TIME_H
 #include <sys/time.h>
+#endif
 #endif /* __sgi */
 #include "hist.h"
 #endif /* WANT_HISTOGRAM */

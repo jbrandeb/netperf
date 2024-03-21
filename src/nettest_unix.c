@@ -78,8 +78,10 @@ char	nettest_unix_id[]="\
 #include <sys/un.h>
 #include <unistd.h>
 #include <string.h>
-#include <time.h>
+#if HAVE_SYS_TIME_H
 #include <sys/time.h>
+#endif
+#include <time.h>
 
 #ifdef NOSTDLIBH
 #include <malloc.h>

@@ -47,7 +47,10 @@ char	netsh_id[]="\
 #include <unistd.h>
 #include <errno.h>
 #include <signal.h>
+#if HAVE_SYS_TIME_H
 #include <sys/time.h>
+#endif
+#include <time.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>

@@ -103,7 +103,10 @@ char	nettest_sctp[]="\
 
 #ifdef WANT_HISTOGRAM
 #ifdef __sgi
+#if HAVE_SYS_TIME_H
 #include <sys/time.h>
+#endif
+#include <time.h>
 #endif /* __sgi */
 #include "hist.h"
 #endif /* WANT_HISTOGRAM */
